@@ -5,10 +5,11 @@ services:
     environment:
       # 環境変数（実行時に設定）
       - OBSIDIAN_VAULT_PATH=${OBSIDIAN_VAULT_PATH:-/vault}
-      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
-      - AWS_REGION=${AWS_REGION:-ap-northeast-1}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME:-}
+      - AWS_REGION=${AWS_REGION:-us-west-2}
+      # AWS認証情報（設定されている場合のみ）
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
     volumes:
       # Obsidian Vaultをマウント
       - ${HOST_VAULT_PATH:-./vault}:/vault:ro
