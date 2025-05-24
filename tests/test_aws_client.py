@@ -14,7 +14,7 @@ from datetime import datetime
 
 # テスト対象のモジュールをインポート（実装後に有効化）
 # from src.aws_client import S3BackupClient, get_aws_credentials, create_bucket_with_encryption, calculate_upload_progress
-
+from src.aws_client import get_aws_credentials, create_bucket_with_encryption, calculate_upload_progress
 
 class TestS3BackupClient(unittest.TestCase):
     """S3BackupClientクラスのテスト"""
@@ -258,13 +258,13 @@ class TestGetAwsCredentials(unittest.TestCase):
     })
     def test_get_aws_credentials_from_env(self):
         """正常系: 環境変数から認証情報取得"""
-        # result = get_aws_credentials()
+        result = get_aws_credentials()
         
-        # expected = {
-        #     'aws_access_key_id': 'test_access_key',
-        #     'aws_secret_access_key': 'test_secret_key'
-        # }
-        # self.assertEqual(result, expected)
+        expected = {
+            'aws_access_key_id': 'test_access_key',
+            'aws_secret_access_key': 'test_secret_key'
+        }
+        self.assertEqual(result, expected)
         pass
     
     @patch.dict(os.environ, {}, clear=True)
@@ -279,13 +279,13 @@ class TestGetAwsCredentials(unittest.TestCase):
         mock_session_instance.get_credentials.return_value = mock_credentials
         mock_session.return_value = mock_session_instance
         
-        # result = get_aws_credentials()
+        result = get_aws_credentials()
         
-        # expected = {
-        #     'aws_access_key_id': 'profile_access_key',
-        #     'aws_secret_access_key': 'profile_secret_key'
-        # }
-        # self.assertEqual(result, expected)
+        expected = {
+            'aws_access_key_id': 'profile_access_key',
+            'aws_secret_access_key': 'profile_secret_key'
+        }
+        self.assertEqual(result, expected)
         pass
     
     @patch.dict(os.environ, {}, clear=True)
@@ -296,9 +296,9 @@ class TestGetAwsCredentials(unittest.TestCase):
         mock_session_instance.get_credentials.return_value = None
         mock_session.return_value = mock_session_instance
         
-        # result = get_aws_credentials()
+        result = get_aws_credentials()
         
-        # self.assertIsNone(result)
+        self.assertIsNone(result)
         pass
 
 
@@ -316,11 +316,11 @@ class TestCreateBucketWithEncryption(unittest.TestCase):
         bucket_name = "test-bucket"
         region = "us-west-2"
         
-        # result = create_bucket_with_encryption(bucket_name, region)
+        result = create_bucket_with_encryption(bucket_name, region)
         
-        # self.assertTrue(result)
-        # mock_s3.create_bucket.assert_called_once()
-        # mock_s3.put_bucket_encryption.assert_called_once()
+        self.assertTrue(result)
+        mock_s3.create_bucket.assert_called_once()
+        mock_s3.put_bucket_encryption.assert_called_once()
         pass
     
     @patch('boto3.client')
@@ -334,9 +334,9 @@ class TestCreateBucketWithEncryption(unittest.TestCase):
         bucket_name = "test-bucket"
         region = "us-west-2"
         
-        # result = create_bucket_with_encryption(bucket_name, region)
+        result = create_bucket_with_encryption(bucket_name, region)
         
-        # self.assertFalse(result)
+        self.assertFalse(result)
         pass
 
 
@@ -348,9 +348,9 @@ class TestCalculateUploadProgress(unittest.TestCase):
         uploaded = 500
         total = 1000
         
-        # result = calculate_upload_progress(uploaded, total)
+        result = calculate_upload_progress(uploaded, total)
         
-        # self.assertEqual(result, 50.0)
+        self.assertEqual(result, 50.0)
         pass
     
     def test_calculate_upload_progress_zero_total(self):
@@ -368,19 +368,19 @@ class TestCalculateUploadProgress(unittest.TestCase):
         uploaded = 1200
         total = 1000
         
-        # result = calculate_upload_progress(uploaded, total)
+        result = calculate_upload_progress(uploaded, total)
         
-        # self.assertEqual(result, 100.0)  # 100%でキャップ
+        self.assertEqual(result, 100.0)  # 100%でキャップ
         pass
     
     def test_calculate_upload_progress_negative_values(self):
         """異常系: 負の値"""
         with self.assertRaises(ValueError):
-            # calculate_upload_progress(-100, 1000)
+            calculate_upload_progress(-100, 1000)
             pass
         
         with self.assertRaises(ValueError):
-            # calculate_upload_progress(100, -1000)
+            calculate_upload_progress(100, -1000)
             pass
 
 
