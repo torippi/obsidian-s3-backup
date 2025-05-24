@@ -19,6 +19,8 @@ services:
       - ./logs:/app/logs
       # 開発時のソースコードマウント（開発用）
       - ./src:/app/src
+      # 開発時のテストコードマウント（開発用）
+      - ./tests:/app/tests
     networks:
       - backup-network
 
