@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  obsidian-backup:
+    build: .
+    container_name: obsidian-s3-backup
+    environment:
+      # 環境変数（実行時に設定）
+      - OBSIDIAN_VAULT_PATH=${OBSIDIAN_VAULT_PATH:-/vault}
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
+      - AWS_REGION=${AWS_REGION:-ap-northeast-1}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    volumes:
+      # Obsidian Vaultをマウント
+      - ${HOST_VAULT_PATH:-./vault}:/vault:ro
+      # AWS認証情報をマウント（オプション）
+      - ~/.aws:/root/.aws:ro
+      # ログディレクトリをマウント
+      - ./logs:/app/logs
+      # 開発時のソースコードマウント（開発用）
+      - ./src:/app/src
+    networks:
+      - backup-network
+
+networks:
+  backup-network:
+    driver: bridge

@@ -1,0 +1,14 @@
+# AWS SDK for Python
+boto3==1.34.69
+
+# Python logging configuration
+colorlog==6.8.2
+
+# File handling and compression
+pathlib2==2.3.7
+
+# Date and time handling
+python-dateutil==2.9.0
+
+# Environment variable handling
+python-dotenv==1.0.1
