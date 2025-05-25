@@ -24,7 +24,6 @@ except ImportError:
     # main.pyがまだ存在しない場合
     MAIN_MODULE_AVAILABLE = False
 
-
 class TestMainModule(unittest.TestCase):
     """mainモジュールの統合テスト"""
     
@@ -184,7 +183,6 @@ class TestConfigurationHelpers(unittest.TestCase):
         # main.py実装前のプレースホルダーテスト
         self.assertTrue(True, "S3 bucket name validation implementation pending")
 
-
 class TestApplicationFlow(unittest.TestCase):
     """アプリケーション全体の流れのテスト"""
     
@@ -204,7 +202,6 @@ class TestApplicationFlow(unittest.TestCase):
         #     pass
         
         pass
-
 
 # テスト実行
 if __name__ == '__main__':
