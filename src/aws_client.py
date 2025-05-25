@@ -8,6 +8,7 @@ import logging
 import boto3
 from botocore.exceptions import ClientError, NoCredentialsError, BotoCoreError
 from typing import Optional, Dict
+from dotenv import load_dotenv
 
 class S3BackupClient:
     """
@@ -316,7 +317,7 @@ class S3BackupClient:
 def get_aws_credentials() -> Optional[Dict[str, str]]:
     """
     AWS認証情報を取得する
-    環境変数 → AWSプロファイル → IAMロールの順で確認
+    .envファイル → 環境変数 → AWSプロファイル → IAMロールの順で確認
     
     Returns:
         Optional[Dict[str, str]]: 認証情報の辞書、取得できない場合はNone
@@ -325,19 +326,28 @@ def get_aws_credentials() -> Optional[Dict[str, str]]:
     """
     logger = logging.getLogger(__name__)
     
-    # 1. 環境変数から認証情報を取得
+    # 1. .envファイルから認証情報を読み込み
+    try:
+        # .envファイルを読み込む（存在しない場合は無視）
+        load_dotenv()
+        logger.info("Loaded environment variables from .env file")
+    except Exception as e:
+        logger.warning(f"Failed to load .env file: {e}")
+    
+    # 2. 環境変数から認証情報を取得（.envで設定された値も含む）
     access_key = os.getenv('AWS_ACCESS_KEY_ID')
     secret_key = os.getenv('AWS_SECRET_ACCESS_KEY')
     
     if access_key and secret_key:
-        logger.info("AWS credentials found in environment variables")
+        logger.info("AWS credentials found in environment variables (.env or system)")
         return {
             'aws_access_key_id': access_key,
             'aws_secret_access_key': secret_key
         }
     
-    # 2. AWSプロファイルから認証情報を取得
+    # 3. AWSプロファイルから認証情報を取得
     try:
+        import boto3
         session = boto3.Session()
         credentials = session.get_credentials()
         
@@ -350,10 +360,9 @@ def get_aws_credentials() -> Optional[Dict[str, str]]:
     except Exception as e:
         logger.warning(f"Failed to get AWS credentials from profile: {e}")
     
-    # 3. 認証情報が取得できない場合
-    logger.error("AWS credentials not found. Please set environment variables or configure AWS CLI.")
+    # 4. 認証情報が取得できない場合
+    logger.error("AWS credentials not found. Please set in .env file, environment variables, or configure AWS CLI.")
     return None
-
 
 def create_bucket_with_encryption(bucket_name: str, region: str) -> bool:
     """

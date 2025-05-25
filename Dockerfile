@@ -18,6 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # アプリケーションソースコードをコピー
 COPY src/ ./src/
+COPY .env .env
 
 # ログディレクトリを作成
 RUN mkdir -p /app/logs

@@ -47,7 +47,7 @@ def setup_logging() -> logging.Logger:
 
 def load_configuration() -> dict:
     """
-    環境変数から設定を読み込み
+    .envファイルと環境変数から設定を読み込み
     
     Returns:
         dict: 設定情報
@@ -55,7 +55,26 @@ def load_configuration() -> dict:
     Raises:
         ValueError: 必須環境変数が不足している場合
     """
-    # 必須環境変数の確認
+    logger = logging.getLogger('obsidian_backup')
+    
+    # 1. .envファイルを読み込み
+    try:
+        # プロジェクトルートの.envファイルを読み込む
+        dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+        if os.path.exists(dotenv_path):
+            load_dotenv(dotenv_path)
+            logger.info(f"Loaded configuration from .env file: {dotenv_path}")
+        else:
+            # カレントディレクトリの.envファイルも確認
+            if os.path.exists('.env'):
+                load_dotenv('.env')
+                logger.info("Loaded configuration from .env file in current directory")
+            else:
+                logger.info("No .env file found, using system environment variables only")
+    except Exception as e:
+        logger.warning(f"Failed to load .env file: {e}")
+    
+    # 2. 必須環境変数の確認
     vault_path = os.getenv('OBSIDIAN_VAULT_PATH')
     bucket_name = os.getenv('AWS_S3_BUCKET_NAME')
     
@@ -65,7 +84,7 @@ def load_configuration() -> dict:
     if not bucket_name:
         raise ValueError("AWS_S3_BUCKET_NAME environment variable is required")
     
-    # 設定情報の構築
+    # 3. 設定情報の構築
     config = {
         'vault_path': vault_path.strip(),
         'bucket_name': bucket_name.strip(),
@@ -74,8 +93,9 @@ def load_configuration() -> dict:
         'backup_prefix': os.getenv('BACKUP_PREFIX', 'obsidian-backup').strip()
     }
     
+    logger.info(f"Configuration loaded - Vault: {config['vault_path']}, Bucket: {config['bucket_name']}, Region: {config['region']}")
+    
     return config
-
 
 def validate_configuration(config: dict) -> bool:
     """
