@@ -191,15 +191,15 @@ class TestApplicationFlow(unittest.TestCase):
         # main.pyの実装が完了するまで、テストの構造のみ定義
         # 実装後に以下のパッチとアサーションを有効化
         
-        # @patch('src.main.setup_logging')
-        # @patch('src.main.load_configuration') 
-        # @patch('src.main.validate_configuration')
-        # @patch('src.backup.ObsidianBackup')
-        # @patch('src.aws_client.S3BackupClient')
-        # def test_implementation(mock_s3_class, mock_backup_class, 
-        #                        mock_validate, mock_load_config, mock_setup_logging):
-        #     # テスト実装をここに記述
-        #     pass
+        @patch('src.main.setup_logging')
+        @patch('src.main.load_configuration') 
+        @patch('src.main.validate_configuration')
+        @patch('src.backup.ObsidianBackup')
+        @patch('src.aws_client.S3BackupClient')
+        def test_implementation(mock_s3_class, mock_backup_class, 
+                               mock_validate, mock_load_config, mock_setup_logging):
+            # テスト実装をここに記述
+            pass
         
         pass
 
