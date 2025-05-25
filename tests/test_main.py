@@ -141,8 +141,8 @@ class TestMainModule(unittest.TestCase):
 
     # ===== mainのテスト =====
     @unittest.skipUnless(MAIN_MODULE_AVAILABLE, "main.py not implemented yet")
-    @patch('src.backup.ObsidianBackup')
-    @patch('src.aws_client.S3BackupClient')
+    @patch('main.ObsidianBackup')
+    @patch('main.S3BackupClient')
     def test_main_success(self, mock_s3_client_class, mock_backup_class):
         """正常系: メイン関数の実行成功"""
         # モックの設定
@@ -188,14 +188,12 @@ class TestApplicationFlow(unittest.TestCase):
     
     def test_full_application_flow(self):
         """統合テスト: 正常なアプリケーション実行フロー"""
-        # main.pyの実装が完了するまで、テストの構造のみ定義
-        # 実装後に以下のパッチとアサーションを有効化
         
         @patch('src.main.setup_logging')
         @patch('src.main.load_configuration') 
         @patch('src.main.validate_configuration')
-        @patch('src.backup.ObsidianBackup')
-        @patch('src.aws_client.S3BackupClient')
+        @patch('src.main.ObsidianBackup') 
+        @patch('src.main.S3BackupClient')
         def test_implementation(mock_s3_class, mock_backup_class, 
                                mock_validate, mock_load_config, mock_setup_logging):
             # テスト実装をここに記述

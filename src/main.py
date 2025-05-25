@@ -11,8 +11,8 @@ from datetime import datetime
 # 相対インポート用にsrcディレクトリをパスに追加
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from src.backup import ObsidianBackup
-from src.aws_client import S3BackupClient
+from backup import ObsidianBackup
+from aws_client import S3BackupClient
 
 def setup_logging() -> logging.Logger:
     """
