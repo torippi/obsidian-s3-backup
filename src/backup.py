@@ -4,6 +4,8 @@ ObsidianのVaultデータをバックアップするためのモジュール
 """
 
 import os
+import tempfile
+import zipfile
 import logging
 from typing import List, Dict, Optional
 from datetime import datetime

@@ -161,44 +161,40 @@ class TestObsidianBackup(unittest.TestCase):
         """異常系: 空のファイルリスト"""
         files = []
         
-        # 実装後に有効化
-        # archive_path = self.backup.create_backup_archive(files)
-        # self.assertIsNone(archive_path)
-        # self.logger.error.assert_called()
+        archive_path = self.backup.create_backup_archive(files)
+        self.assertIsNone(archive_path)
+        self.logger.error.assert_called()
         pass
     
     def test_create_backup_archive_nonexistent_files(self):
         """異常系: 存在しないファイルを含む"""
         files = [self.test_md_file, "/nonexistent/file.md"]
         
-        # 実装後に有効化
-        # archive_path = self.backup.create_backup_archive(files)
-        # self.assertIsNotNone(archive_path)  # 存在するファイルのみでアーカイブ作成
-        # self.logger.warning.assert_called()  # 警告ログが出力される
+        archive_path = self.backup.create_backup_archive(files)
+        self.assertIsNotNone(archive_path)  # 存在するファイルのみでアーカイブ作成
+        self.logger.warning.assert_called()  # 警告ログが出力される
         pass
 
     # ===== generate_backup_metadataメソッドのテスト =====
     def test_generate_backup_metadata_success(self):
         """正常系: バックアップメタデータの生成成功"""
-        # 実装後に有効化
-        # metadata = self.backup.generate_backup_metadata()
-        # 
-        # self.assertIsInstance(metadata, dict)
-        # self.assertIn('backup_date', metadata)
-        # self.assertIn('vault_path', metadata)
-        # self.assertIn('file_count', metadata)
-        # self.assertIn('total_size', metadata)
+        metadata = self.backup.generate_backup_metadata()
+        
+        self.assertIsInstance(metadata, dict)
+        self.assertIn('backup_date', metadata)
+        self.assertIn('vault_path', metadata)
+        self.assertIn('file_count', metadata)
+        self.assertIn('total_size', metadata)
         pass
     
     def test_generate_backup_metadata_custom_info(self):
         """正常系: カスタム情報を含むメタデータ"""
-        # 実装後に有効化
-        # metadata = self.backup.generate_backup_metadata()
-        # 
-        # # タイムスタンプの形式を確認
-        # backup_date = metadata.get('backup_date')
-        # self.assertIsNotNone(backup_date)
-        # datetime.strptime(backup_date, '%Y-%m-%d %H:%M:%S')  # 形式チェック
+        metadata = self.backup.generate_backup_metadata()
+        
+        # タイムスタンプの形式を確認
+        backup_date = metadata.get('backup_date')
+        self.assertIsNotNone(backup_date)
+        datetime.strptime(backup_date, '%Y-%m-%d %H:%M:%S')  # 形式チェック
         pass
 
     # ===== execute_backupメソッドのテスト =====
@@ -209,26 +205,24 @@ class TestObsidianBackup(unittest.TestCase):
         self.mock_aws_client.upload_file.return_value = True
         self.mock_aws_client.generate_backup_key.return_value = "test-backup-key.zip"
         
-        # 実装後に有効化
-        # result = self.backup.execute_backup()
-        # 
-        # self.assertTrue(result)
-        # self.mock_aws_client.ensure_bucket_exists.assert_called_once()
-        # self.mock_aws_client.upload_file.assert_called_once()
-        # self.logger.info.assert_called()
+        result = self.backup.execute_backup()
+        
+        self.assertTrue(result)
+        self.mock_aws_client.ensure_bucket_exists.assert_called_once()
+        self.mock_aws_client.upload_file.assert_called_once()
+        self.logger.info.assert_called()
         pass
     
     def test_execute_backup_bucket_creation_failure(self):
         """異常系: バケット作成失敗"""
         self.mock_aws_client.ensure_bucket_exists.return_value = False
         
-        # 実装後に有効化
-        # result = self.backup.execute_backup()
-        # 
-        # self.assertFalse(result)
-        # self.mock_aws_client.ensure_bucket_exists.assert_called_once()
-        # self.mock_aws_client.upload_file.assert_not_called()
-        # self.logger.error.assert_called()
+        result = self.backup.execute_backup()
+         
+        self.assertFalse(result)
+        self.mock_aws_client.ensure_bucket_exists.assert_called_once()
+        self.mock_aws_client.upload_file.assert_not_called()
+        self.logger.error.assert_called()
         pass
     
     def test_execute_backup_upload_failure(self):
@@ -237,12 +231,11 @@ class TestObsidianBackup(unittest.TestCase):
         self.mock_aws_client.upload_file.return_value = False
         self.mock_aws_client.generate_backup_key.return_value = "test-backup-key.zip"
         
-        # 実装後に有効化
-        # result = self.backup.execute_backup()
-        # 
-        # self.assertFalse(result)
-        # self.mock_aws_client.upload_file.assert_called_once()
-        # self.logger.error.assert_called()
+        result = self.backup.execute_backup()
+         
+        self.assertFalse(result)
+        self.mock_aws_client.upload_file.assert_called_once()
+        self.logger.error.assert_called()
         pass
 
 
